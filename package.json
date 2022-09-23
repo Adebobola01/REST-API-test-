@@ -1,0 +1,22 @@
+{
+    "dependencies": {
+        "body-parser": "^1.20.0",
+        "express": "^4.18.1",
+        "express-validator": "^6.14.2",
+        "mongoose": "^6.6.1"
+    },
+    "name": "rest-start",
+    "version": "1.0.0",
+    "description": "my REST ",
+    "main": "app.js",
+    "devDependencies": {
+        "dotenv": "^16.0.2",
+        "nodemon": "^2.0.20"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon app.js"
+    },
+    "author": "Adebobola Oyedunmade",
+    "license": "ISC"
+}
