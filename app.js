@@ -4,6 +4,7 @@ const authRoutes = require("./routes/auth");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require("path");
+// const { Server } = require("socket.io");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
@@ -62,8 +63,8 @@ mongoose
     .connect(process.env.MongoDB_URI)
     .then((result) => {
         console.log("connected to database");
-        const server = app.listen(8080);
-        const io = require("socket.io")(server);
+        const httpServer = app.listen(8080);
+        const io = require("./socket").init(httpServer);
         io.on("connection", (socket) => {
             console.log("client connected!");
         });

@@ -65,11 +65,11 @@ exports.getLogin = (req, res, next) => {
 
             const token = jwt.sign(
                 {
-                    exp: Math.floor(Date.now() / 1000) + 60 * 60,
                     email: loadedUser.email,
                     userId: loadedUser._id.toString(),
                 },
-                "theprivatekeyusedtosignthetoken"
+                "theprivatekeyusedtosignthetoken",
+                { expiresIn: "1h" }
             );
             res.status(200).json({
                 token: token,

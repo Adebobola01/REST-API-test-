@@ -3,6 +3,7 @@ const { validationResult } = require("express-validator");
 const Post = require("../models/post");
 const path = require("path");
 const User = require("../models/user");
+const io = require("../socket");
 const fs = require("fs");
 
 exports.getPosts = async (req, res, next) => {
@@ -19,7 +20,7 @@ exports.getPosts = async (req, res, next) => {
             posts: posts,
             totalItems: totalItems,
         });
-    } catch (error) {
+    } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -58,8 +59,9 @@ exports.createPost = async (req, res, next) => {
         await post.save();
         const user = await User.findById(req.userId);
         creator = user;
-        await user.posts.push(post);
+        user.posts.push(post);
         await user.save();
+        io.getIo().emit("posts", { action: "create", post: post });
         res.status(201).json({
             message: "post created successfully!",
             post: post,
@@ -84,7 +86,7 @@ exports.getPost = async (req, res, next) => {
             message: "post fetched successfully!",
             post: post,
         });
-    } catch (error) {
+    } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -166,7 +168,7 @@ exports.deletePost = async (req, res, next) => {
         await user.save();
 
         res.status(201).json({ message: "post deleted successfully!" });
-    } catch (error) {
+    } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
         }
