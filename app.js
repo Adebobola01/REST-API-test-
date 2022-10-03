@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const fs = require("fs");
 const path = require("path");
 const graphqlSchema = require("./graphql/schema");
 const graphqlResolver = require("./graphql/resolver");
@@ -53,6 +54,15 @@ app.use((req, res, next) => {
     next();
 });
 
+app.put("/post-image", (req, res, next) => {
+    if (!req.file) {
+        return res.status(200).json({ message: "No file Provided" });
+    }
+    if (req.body.oldPath) {
+        clearImage(req.body.oldPath);
+    }
+});
+
 app.use(auth);
 
 app.use(
@@ -90,3 +100,7 @@ mongoose
         console.log(err);
     });
 // app.listen(8080);
+const clearImage = (filePath) => {
+    filePath = path.join(__dirname, "..", filePath);
+    fs.unlink(filePath, (err) => console.log(err));
+};
